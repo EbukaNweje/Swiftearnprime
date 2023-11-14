@@ -69,7 +69,7 @@ exports.sandOtp = async (req, res, next) =>{
     const UserEmail = await User.findOne({email})
     const mailOptions ={
       from: process.env.USER,
-      to: newUser.email, 
+      to: UserEmail.email, 
       subject: "One-Time Password",
     html: `
      <h4 style="font-size:25px;">Hi ${UserEmail.userName} !</h4> 
@@ -273,6 +273,49 @@ exports.login = async (req, res, next)=>{
     }catch(err){
         next(err)
     }
+}
+
+exports.loginEmail = async (req, res, next) =>{
+  try{
+    const email = req.body.email
+    
+    const UserEmail = await User.findOne({email})
+    const mailOptions ={
+      from: process.env.USER,
+      to: UserEmail.email,
+      subject: "Successful Login!",
+    html: `
+     <h4>Dear ${UserEmail.userName}</h4>
+     <p>Welcome back!</p>
+
+     <Span>Use the following one-time password (OTP) to sign in to your SWIFTEARNPRIME PLATFORM account. <br>
+     This OTP will be valid for 15 minutes</span>
+
+     <h1 style="font-size:30px; color: blue;"><b>${UserEmail.otp}</b></h1>
+
+     <p> You have logged in successfully to swiftearnprime</p>
+     <p>If you did not initiate this, change your password immediately and send our Customer Center an email to <br/> ${process.env.USER}
+     </p>
+     <p>Why send this email? We take security very seriously and we want to keep you in the loop of activities on your account.</p>
+      `,
+  }
+  
+  transporter.sendMail(mailOptions,(err, info)=>{
+      if(err){
+          console.log("erro",err.message);
+      }else{
+          console.log("Email has been sent to your inbox", info.response);
+      }
+  })
+  
+    res.status(200).json({
+      status: 'success',
+      message: 'Link sent to email!',
+    })
+  }catch(err){
+    next(err)
+  }
+
 }
 
 exports.restLink = async (req, res, next) => {
