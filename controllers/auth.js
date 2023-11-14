@@ -50,31 +50,6 @@ exports.register = async (req, res, next)=>{
          newUser.otp = otpCode
 
          await newUser.save()
-         
-         const mailOptions ={
-            from: process.env.USER,
-            to: newUser.email, 
-            subject: "One-Time Password",
-          html: `
-           <h4 style="font-size:25px;">Hi ${newUser.userName} !</h4> 
-
-           <p>One-time password (OTP) to sign in to your account.</p>
-
-           <h1 style="font-size:30px; color: red;"><b>${newUser.otp}</b></h1>
-
-           <p>Regards, <br>
-           Swiftearnprime <br>
-           swiftearnprime.org</p>
-            `,
-        }
-
-        transporter.sendMail(mailOptions,(err, info)=>{
-          if(err){
-              console.log("erro",err.message);
-          }else{
-              console.log("Email has been sent to your inbox", info.response);
-          }
-      })
          res.status(201).json({
             message: "User has been created.",
             data: newUser
@@ -85,6 +60,46 @@ exports.register = async (req, res, next)=>{
     }catch(err){
         next(err)
     }
+}
+
+exports.sandOtp = async (req, res, next) =>{
+  try{
+    const email = req.body.email
+    
+    const UserEmail = await User.findOne({email})
+    const mailOptions ={
+      from: process.env.USER,
+      to: newUser.email, 
+      subject: "One-Time Password",
+    html: `
+     <h4 style="font-size:25px;">Hi ${UserEmail.userName} !</h4> 
+
+     <p>One-time password (OTP) to sign in to your account.</p>
+
+     <h1 style="font-size:30px; color: red;"><b>${UserEmail.otp}</b></h1>
+
+     <p>Regards, <br>
+     Swiftearnprime <br>
+     swiftearnprime.org</p>
+      `,
+  }
+  
+  transporter.sendMail(mailOptions,(err, info)=>{
+      if(err){
+          console.log("erro",err.message);
+      }else{
+          console.log("Email has been sent to your inbox", info.response);
+      }
+  })
+  
+    res.status(200).json({
+      status: 'success',
+      message: 'Link sent to email!',
+    })
+  }catch(err){
+    next(err)
+  }
+
 }
 
 exports.resendotp = async (req,res,next) => {
