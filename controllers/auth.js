@@ -69,7 +69,7 @@ exports.sandOtp = async (req, res, next) =>{
     const UserEmail = await User.findOne({email})
     const mailOptions ={
       from: process.env.USER,
-      to: UserEmail.email, 
+      to: newUser.email, 
       subject: "One-Time Password",
     html: `
      <h4 style="font-size:25px;">Hi ${UserEmail.userName} !</h4> 
@@ -241,34 +241,6 @@ exports.login = async (req, res, next)=>{
         //     httpOnly: true, 
         //  }).
 
-        const mailOptions ={
-            from: process.env.USER,
-            to: Users.email,
-            subject: "Successful Login!",
-          html: `
-           <h4>Dear ${Users.userName}</h4>
-           <p>Welcome back!</p>
-
-           <Span>Use the following one-time password (OTP) to sign in to your SWIFTEARNPRIME PLATFORM account. <br>
-           This OTP will be valid for 15 minutes</span>
-      
-           <h1 style="font-size:30px; color: blue;"><b>${Users.otp}</b></h1>
-
-           <p> You have logged in successfully to swiftearnprime</p>
-           <p>If you did not initiate this, change your password immediately and send our Customer Center an email to <br/> ${process.env.USER}
-           </p>
-           <p>Why send this email? We take security very seriously and we want to keep you in the loop of activities on your account.</p>
-            `,
-        }
-  
-        transporter.sendMail(mailOptions,(err, info)=>{
-            if(err){
-                console.log("erro",err.message);
-            }else{
-                console.log("Email has been sent to your inbox", info.response);
-            }
-        })
-
          res.status(200).json({...otherDetails})
     }catch(err){
         next(err)
@@ -282,21 +254,20 @@ exports.loginEmail = async (req, res, next) =>{
     const UserEmail = await User.findOne({email})
     const mailOptions ={
       from: process.env.USER,
-      to: UserEmail.email,
-      subject: "Successful Login!",
+      to: newUser.email, 
+      subject: "One-Time Password",
     html: `
-     <h4>Dear ${UserEmail.userName}</h4>
-     <p>Welcome back!</p>
+     <h4 style="font-size:25px;">Hi ${UserEmail.userName} !</h4> 
 
-     <Span>Use the following one-time password (OTP) to sign in to your SWIFTEARNPRIME PLATFORM account. <br>
-     This OTP will be valid for 15 minutes</span>
+    <p>
+    Welcome to swiftearnprime PLATFORM. Your Trading account has been set up successfully, You can go ahead and fund your Trade account to start up your Trade immediately. For more enquiry kindly contact 
+    your account manager or write directly with our live chat support on our platform
+    or you can send a direct mail to us at swiftearnprime@gmail.com.
+    </p>
 
-     <h1 style="font-size:30px; color: blue;"><b>${UserEmail.otp}</b></h1>
-
-     <p> You have logged in successfully to swiftearnprime</p>
-     <p>If you did not initiate this, change your password immediately and send our Customer Center an email to <br/> ${process.env.USER}
-     </p>
-     <p>Why send this email? We take security very seriously and we want to keep you in the loop of activities on your account.</p>
+     <p>Regards, <br>
+     Swiftearnprime <br>
+     swiftearnprime.org</p>
       `,
   }
   
