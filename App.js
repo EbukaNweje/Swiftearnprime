@@ -4,7 +4,11 @@ const fileUploader = require("express-fileupload")
 const authRouter = require("./routes/authRoute")
 const userRouter = require("./routes/userRoutes")
 const cors = require("cors");
+
+
 const app = express()
+
+app.use(cors({origin:"*"}))
 
 // app.use(cors());
 app.use(express.json());
@@ -16,8 +20,11 @@ app.use(cookkieParser())
 
 
 
-app.use("/api", cors({origin:"*"}), authRouter)
-app.use("/api", cors({origin:"*"}), userRouter)
+// app.use("/api", cors({origin:"*"}), authRouter)
+// app.use("/api", cors({origin:"*"}), userRouter)
+
+app.use("/api", authRouter)
+app.use("/api",  userRouter)
 
 app.use((err, req, res, next)=>{
    const errorStatus = err.status || 500
