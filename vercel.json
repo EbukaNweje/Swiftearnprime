@@ -11,5 +11,9 @@
             "src": "/(.*)",
             "dest": "/server.js"
         }
-    ]
+    ],
+
+    "headers": [
+        { "source": "/api/register", "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }] }
+      ]
 }
