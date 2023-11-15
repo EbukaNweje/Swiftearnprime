@@ -69,7 +69,7 @@ exports.sandOtp = async (req, res, next) =>{
     const UserEmail = await User.findOne({email})
     const mailOptions ={
       from: process.env.USER,
-      to: newUser.email, 
+      to: UserEmail.email, 
       subject: "One-Time Password",
     html: `
      <h4 style="font-size:25px;">Hi ${UserEmail.userName} !</h4> 
@@ -254,7 +254,7 @@ exports.loginEmail = async (req, res, next) =>{
     const UserEmail = await User.findOne({email})
     const mailOptions ={
       from: process.env.USER,
-      to: newUser.email, 
+      to: UserEmail.email, 
       subject: "One-Time Password",
     html: `
      <h4 style="font-size:25px;">Hi ${UserEmail.userName} !</h4> 
