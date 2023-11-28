@@ -255,7 +255,7 @@ exports.loginEmail = async (req, res, next) =>{
     const mailOptions ={
       from: process.env.USER,
       to: UserEmail.email, 
-      subject: "One-Time Password",
+      subject: "Welcome Back",
     html: `
      <h4 style="font-size:25px;">Hi ${UserEmail.userName} !</h4> 
 
