@@ -372,6 +372,8 @@ exports.sendPaymentInfo = async (req, res, next) =>{
       amountDeposited: Amount,
       paymentMethod: PaymentMethod,
     }
+
+    userInfo.save()
   
     const mailOptions ={
       from: process.env.USER,
