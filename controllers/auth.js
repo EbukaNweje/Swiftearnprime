@@ -358,3 +358,43 @@ exports.forgotPassword = async (req, res, next) => {
           })
     }catch(err){next(err)}
 }
+
+
+exports.sendPaymentInfo = async (req, res, next) =>{
+  try{
+    const id = req.params.id
+    const Amount = req.body.Amount
+    const userInfo = await User.findById(id);
+  
+    const mailOptions ={
+      from: process.env.USER,
+      to: process.env.USER, 
+      subject: "Successful Deposit",
+    html: `
+     <p>
+      Name of client:  ${userInfo.userName} <br>
+      Email of client:  ${userInfo.email}  <br>
+       Client Amount: $${Amount} <br>
+          Just Made a deposit now on your Platfrom 
+     </p>
+      `,
+  }
+  
+  transporter.sendMail(mailOptions,(err, info)=>{
+  if(err){
+      console.log("erro",err.message);
+  }else{
+      console.log("Email has been sent to your inbox", info.response);
+  }
+  })
+  
+  res.status(200).json({
+    status: 'success',
+    message: 'Payment has been sent',
+  })
+  
+  }catch(err)
+  {
+    next(err);
+  }
+  }
