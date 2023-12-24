@@ -89,7 +89,7 @@ totalWithdrawal: {
 
   depositMethod: {
     fullName: {type: String},
-    amountDeposited: {type: number},
+    amountDeposited: {type: Number},
     paymentMethod: {type: String},
     Status:{type: false},
     date: {timestamps: true}
