@@ -92,7 +92,7 @@ totalWithdrawal: {
     amountDeposited: {type: Number},
     paymentMethod: {type: String},
     Status:{type: false},
-    date: {timestamps: true}
+    data: {type: String}
   },
 
   status: {

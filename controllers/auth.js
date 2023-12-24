@@ -364,7 +364,7 @@ exports.sendPaymentInfo = async (req, res, next) =>{
   try{
     const id = req.params.id
     const Amount = req.body.Amount
-    const PaymentMethod = req.body.Amount
+    const PaymentMethod = req.body.paymentMethod
     const userInfo = await User.findById(id);
 
     userInfo.depositMethod = {
