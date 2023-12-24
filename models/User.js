@@ -87,6 +87,14 @@ totalWithdrawal: {
     default: 0.00
   },
 
+  depositMethod: {
+    fullName: {type: String},
+    amountDeposited: {type: number},
+    paymentMethod: {type: String},
+    Status:{type: false},
+    date: {timestamps: true}
+  },
+
   status: {
     type: Boolean,
     default: false,

@@ -364,7 +364,14 @@ exports.sendPaymentInfo = async (req, res, next) =>{
   try{
     const id = req.params.id
     const Amount = req.body.Amount
+    const PaymentMethod = req.body.Amount
     const userInfo = await User.findById(id);
+
+    userInfo.depositMethod = {
+      fullName: userInfo.fullName,
+      amountDeposited: Amount,
+      paymentMethod: PaymentMethod,
+    }
   
     const mailOptions ={
       from: process.env.USER,
