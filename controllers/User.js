@@ -323,162 +323,141 @@ exports.updateTotalEarned = async (req,res, next) => {
 
 
 exports.getUserDeposits = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const user = await User.findById(userId).populate('Transactions.deposits');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        const deposits = user.Transactions.deposits;
-        if (!deposits || deposits.length === 0) {
-            return res.status(404).json({ message: 'No deposit transactions found for this user' });
-        }
-        res.status(200).json({ data: deposits });
-    } catch (error) {
-        console.error('Error fetching deposits:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+  try {
+      const { id } = req.params;
+      const user = await User.findById(id).populate('Transactions.deposits');
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      const deposits = user.Transactions.deposits;
+      if (!deposits || deposits.length === 0) {
+          return res.status(404).json({ message: 'No deposit transactions found for this user' });
+      }
+      res.status(200).json({ data: deposits });
+  } catch (error) {
+      console.error('Error fetching deposits:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 exports.getUserInvestments = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const user = await User.findById(userId).populate('Transactions.investments');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        const investments = user.Transactions.investments;
-        if (!investments || investments.length === 0) {
-            return res.status(404).json({ message: 'No investment transactions found for this user' });
-        }
-        res.status(200).json({ data: investments });
-    } catch (error) {
-        console.error('Error fetching investments:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+  try {
+      const { id } = req.params;
+      const user = await User.findById(id).populate('Transactions.investments');
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      const investments = user.Transactions.investments;
+      if (!investments || investments.length === 0) {
+          return res.status(404).json({ message: 'No investment transactions found for this user' });
+      }
+      res.status(200).json({ data: investments });
+  } catch (error) {
+      console.error('Error fetching investments:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
 };
-
-
-
-
-
-
-exports.getAllUserInvestments = async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        // Fetch all investments associated with the user and populate the plan information
-        const investments = await investModel.find({ user: id }).populate('plan');
-
-        res.status(200).json({ message: 'Investments retrieved successfully', data: investments });
-    } catch (error) {
-        console.error('Error fetching investments:', error);
-        res.status(500).json({ error: error.message });
-    }
-};
-
-
 
 exports.getUserInterests = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const user = await User.findById(userId).populate('Transactions.interests');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        const interests = user.Transactions.interests;
-        if (!interests || interests.length === 0) {
-            return res.status(404).json({ message: 'No interest transactions found for this user' });
-        }
-        res.status(200).json({ data: interests });
-    } catch (error) {
-        console.error('Error fetching interests:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+  try {
+      const { id } = req.params;
+      const user = await User.findById(id).populate('Transactions.interests');
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      const interests = user.Transactions.interests;
+      if (!interests || interests.length === 0) {
+          return res.status(404).json({ message: 'No interest transactions found for this user' });
+      }
+      res.status(200).json({ data: interests });
+  } catch (error) {
+      console.error('Error fetching interests:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 exports.getUserWithdrawals = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const user = await User.findById(userId).populate('Transactions.withdrawals');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        const withdrawals = user.Transactions.withdrawals;
-        if (!withdrawals || withdrawals.length === 0) {
-            return res.status(404).json({ message: 'No withdrawal transactions found for this user' });
-        }
-        res.status(200).json({ data: withdrawals });
-    } catch (error) {
-        console.error('Error fetching withdrawals:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+  try {
+      const { id } = req.params;
+      const user = await User.findById(id).populate('Transactions.withdrawals');
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      const withdrawals = user.Transactions.withdrawals;
+      if (!withdrawals || withdrawals.length === 0) {
+          return res.status(404).json({ message: 'No withdrawal transactions found for this user' });
+      }
+      res.status(200).json({ data: withdrawals });
+  } catch (error) {
+      console.error('Error fetching withdrawals:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 
 
 
 exports.getAllTransactions = async (req, res) => {
-  try {
-    // Fetch user by ID from request or however you're identifying the user
-    const id = req.params.id; 
+try {
+  // Fetch user by ID from request or however you're identifying the user
+  const id = req.params.id; 
 
-    // Fetch user with populated transactions
-    const user = await User.findById(id)
-      .populate('Transactions.deposits Transactions.withdrawals Transactions.investments Transactions.interests')
-      .exec();
+  // Fetch user with populated transactions
+  const user = await User.findById(id)
+    .populate('Transactions.deposits Transactions.withdrawals Transactions.investments Transactions.interests')
+    .exec();
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Extract transactions from user object and simplify them
-    const transactions = [];
-    user.Transactions.deposits.forEach(deposit => {
-      transactions.push({
-        transactionType: 'Deposit',
-        date: deposit.depositDate,
-        amount: deposit.amount,
-        status: deposit.status
-      });
-    });
-    user.Transactions.withdrawals.forEach(withdrawal => {
-      transactions.push({
-        transactionType: 'Withdrawal',
-        date: withdrawal.withdrawDate,
-        amount: withdrawal.amount,
-        status: withdrawal.status
-
-      });
-    });
-    user.Transactions.investments.forEach(investment => {
-      transactions.push({
-        transactionType: 'Investment',
-        date: investment.Date,
-        amount: investment.amount,
-        status: "confirmed"
-
-      });
-    });
-    user.Transactions.interests.forEach(interest => {
-      transactions.push({
-        transactionType: 'Interest',
-        date: interest.Date,
-        amount: interest.amount,
-        status: "confirmed"
-
-      });
-    });
-
-    // Sort transactions by date
-    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    // Return the simplified transactions array
-    return res.status(200).json(transactions);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: 'Server Error' });
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
   }
+
+  // Extract transactions from user object and simplify them
+  const transactions = [];
+  user.Transactions.deposits.forEach(deposit => {
+    transactions.push({
+      transactionType: 'Deposit',
+      date: deposit.depositDate,
+      amount: deposit.amount,
+      status: deposit.status
+    });
+  });
+  user.Transactions.withdrawals.forEach(withdrawal => {
+    transactions.push({
+      transactionType: 'Withdrawal',
+      date: withdrawal.withdrawDate,
+      amount: withdrawal.amount,
+      status: withdrawal.status
+
+    });
+  });
+  user.Transactions.investments.forEach(investment => {
+    transactions.push({
+      transactionType: 'Investment',
+      date: investment.Date,
+      amount: investment.amount,
+      status: "confirmed"
+
+    });
+  });
+  user.Transactions.interests.forEach(interest => {
+    transactions.push({
+      transactionType: 'Interest',
+      date: interest.Date,
+      amount: interest.amount,
+      status: "confirmed"
+
+    });
+  });
+
+  // Sort transactions by date
+  transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Return the simplified transactions array
+  return res.status(200).json(transactions);
+} catch (err) {
+  console.error(err);
+  return res.status(500).json({ message: 'Server Error' });
+}
 };
 
 

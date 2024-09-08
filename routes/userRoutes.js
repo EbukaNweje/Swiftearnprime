@@ -29,4 +29,5 @@ Routers.route('/getalltransactions/:id').get(UserData.getAllTransactions)
 Routers.route('/getalluserplan/:id').get(UserData.getAllUserInvestmentPlans)
 Routers.route('/transferprofittoaccount/:id').post(UserData.transferProfitsToAcct)
 
+
 module.exports = Routers
