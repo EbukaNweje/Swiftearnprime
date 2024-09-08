@@ -15,7 +15,6 @@ Routers.route("/restLink/:id/:token").post(register.restLink).get(register.getre
 Routers.route("/loginemailsand").post(register.loginEmailSand)
 Routers.route("/signupemailsand").post(register.signupEmailSand)
 Routers.route("/depositemailsend/:id").post(register.depositEmailSend)
-Routers.route("/investemailsend/:id").post(register.InvestEmailSend)
 Routers.route("/withdrawalemailsend/:id").post(register.withdrawalEmailSend)
 Routers.route("/approvedepositemailsend/:id").post(register.ApproveDepositEmailSend)
 Routers.route("/confirmwithdrawalemailsend/:withdrawId").post(register.ConfirmWithdrawalEmailSend)

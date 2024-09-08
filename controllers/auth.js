@@ -6,7 +6,6 @@ const {validationResult } = require('express-validator');
 const otpGenerator = require('otp-generator');
 const transporter = require("../utilities/email");
 const withdrawModel = require("../models/withdrawModel");
-const plansModel = require("../models/plansModel");
 
 
 exports.register = async (req, res, next)=>{
@@ -79,6 +78,24 @@ exports.tradingSession = async (req, res, next) => {
         message: "checking.",
         data: userInfo,
     })
+
+
+//       if(sessionEmail.accountBalance > 0){
+//         // Set the target date to day 0
+//       const targetDate = new Date('2023-11-01 00:00:00').getTime();
+//        currentDate = new Date().getTime();
+//       const timeDifference = targetDate - currentDate;
+  
+// //     if (timeDifference <= 0) {
+// //         // When the countdown reaches day 0
+// //         return 'Countdown: Day 0';
+// //     } else {
+// //         // Calculate days
+// //         const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+// //         return {Countdown: Day ` ${days}`};
+// // }
+//  }
+
 
   }catch(err){
     next(err)
@@ -244,7 +261,7 @@ exports.login = async (req, res, next)=>{
         const Users = await User.findOne({email: req.body.email})
         if(!Users) return next(createError(404, "User not found!"))
 
-        const isPasswordCorrect = await bcrypt.compareSync(req.body.password, Users.password)
+        const isPasswordCorrect = await bcrypt.compare(req.body.password, Users.password)
         if(!isPasswordCorrect) return next(createError(400, "Wrong password or username"))
 
         if(Users.verify === false)return next(createError(400, "User have not been verified"))
@@ -256,7 +273,7 @@ exports.login = async (req, res, next)=>{
         const {token, password, isAdmin, ...otherDetails} = Users._doc
 
     
-         res.status(200).json({token, ...otherDetails})
+         res.status(200).json({...otherDetails})
     }catch(err){
         next(err)
     }
@@ -364,16 +381,16 @@ exports.AdminAproveEmailSand = async (req, res, next) =>{
                     <tr>
                         <td style="padding: 10px;">
                             <div class="contact-info">
-                                <p><img src="https://i.ibb.co/K04zq8b/WCall.png" alt="" style="width: 20px;"> +1 (615) 623-1368</p>
-                                <p><img src="https://i.ibb.co/TL7k4FF/Container.png" alt="" style="width: 20px;"> thecoinstarprobitminers@gmail.com</p>
-                                <p><img src="https://i.ibb.co/CbSFkwC/Wloc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
+                                <p><img src="https://i.ibb.co/JHCPcsm/Call.png" alt="" style="width: 20px;"> +1 504-332-9455</p>
+                                <p><img src="https://i.ibb.co/X8FBvY8/Container.png" alt="" style="width: 20px;"> support@Swiftearn Prime.com</p>
+                                <p><img src="https://i.ibb.co/1JTGL6y/loc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 20px 0;">
-                            <img src="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg" alt="">
-                            <h1 style="color: #ffffff; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
+                            <img src="https://i.ibb.co/KKGS4Cw/footer-logo.png" alt="">
+                            <h1 style="color: #eb6a07; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
                         </td>
                     </tr>
                 </table>
@@ -381,14 +398,14 @@ exports.AdminAproveEmailSand = async (req, res, next) =>{
     
             <div class="content">
                 <p>Hi ${UserEmail.fullName},</p>
-                <p>Your Trading account has been approved successfully.<br><br>Folle this link to login: https://swiftearn-prime.vercel.app/login<br><br>You can go ahead and fund your Trade account to start up your Trade immediately. Deposit through Bitcoin.</p>
+                <p>Your Trading account has been approved successfully.<br><br>Folle this link to login: https://swiftearn-prime.vercel.app/login <br><br>You can go ahead and fund your Trade account to start up your Trade immediately. Deposit through Bitcoin.</p>
                 <p>For more enquiries, kindly contact your account manager or use our live chat support on our platform. You can also send a direct mail to us at <span style="color: #4c7fff;">${process.env.USER}</span></p>
                 <p>Thank you for choosing our platform. We wish you successful trading.</p>
             </div>
     
             <div class="footer">
                 <div class="footer-content">
-                    <div class="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg">
+                    <div class="https://i.ibb.co/KKGS4Cw/footer-logo.png">
                         <img src="footer-logo.png" alt="">
                     </div>
                     <div class="footer-info">
@@ -454,9 +471,12 @@ exports.signupEmailSand = async (req, res, next) =>{
     const UserEmail = await User.findOne({email})
     const mailOptions ={
       from: process.env.USER,
-      to: email,
+      to: UserEmail.email,
       subject: "Successful Sign Up!",
     html: `
+    
+
+
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -523,16 +543,16 @@ exports.signupEmailSand = async (req, res, next) =>{
                     <tr>
                         <td style="padding: 10px;">
                             <div class="contact-info">
-                                <p><img src="https://i.ibb.co/K04zq8b/WCall.png" alt="" style="width: 20px;"> +1 (615) 623-1368</p>
-                                <p><img src="https://i.ibb.co/TL7k4FF/Container.png" alt="" style="width: 20px;"> thecoinstarprobitminers@gmail.com</p>
-                                <p><img src="https://i.ibb.co/CbSFkwC/Wloc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
+                                <p><img src="https://i.ibb.co/JHCPcsm/Call.png" alt="" style="width: 20px;"> +1 504-332-9455</p>
+                                <p><img src="https://i.ibb.co/X8FBvY8/Container.png" alt="" style="width: 20px;"> support@Swiftearn Prime.com</p>
+                                <p><img src="https://i.ibb.co/1JTGL6y/loc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 20px 0;">
-                            <img src="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg" alt="">
-                            <h1 style="color: #ffffff; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
+                            <img src="https://i.ibb.co/KKGS4Cw/footer-logo.png" alt="">
+                            <h1 style="color: #eb6a07; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
                         </td>
                     </tr>
                 </table>
@@ -547,7 +567,7 @@ exports.signupEmailSand = async (req, res, next) =>{
     
             <div class="footer">
                 <div class="footer-content">
-                    <div class="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg">
+                    <div class="https://i.ibb.co/KKGS4Cw/footer-logo.png">
                         <img src="footer-logo.png" alt="">
                     </div>
                     <div class="footer-info">
@@ -612,7 +632,7 @@ exports.loginEmailSand = async (req, res, next) =>{
     const mailOptions ={
       from: process.env.USER,
       to: UserEmail.email,
-      subject: "Successful https://coinstarprobitminers.vercel.app/auth51d2.html?route=login!",
+      subject: "Successful Login!",
     html: `
 
     <!DOCTYPE html>
@@ -681,16 +701,16 @@ exports.loginEmailSand = async (req, res, next) =>{
                     <tr>
                         <td style="padding: 10px;">
                             <div class="contact-info">
-                                <p><img src="https://i.ibb.co/K04zq8b/WCall.png" alt="" style="width: 20px;"> +1 (615) 623-1368</p>
-                                <p><img src="https://i.ibb.co/TL7k4FF/Container.png" alt="" style="width: 20px;"> thecoinstarprobitminers@gmail.com</p>
-                                <p><img src="https://i.ibb.co/CbSFkwC/Wloc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
+                                <p><img src="https://i.ibb.co/JHCPcsm/Call.png" alt="" style="width: 20px;"> +1 504-332-9455</p>
+                                <p><img src="https://i.ibb.co/X8FBvY8/Container.png" alt="" style="width: 20px;"> support@Swiftearn Prime.com</p>
+                                <p><img src="https://i.ibb.co/1JTGL6y/loc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 20px 0;">
-                            <img src="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg" alt="">
-                            <h1 style="color: #ffffff; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
+                            <img src="https://i.ibb.co/KKGS4Cw/footer-logo.png" alt="">
+                            <h1 style="color: #eb6a07; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
                         </td>
                     </tr>
                 </table>
@@ -705,7 +725,7 @@ exports.loginEmailSand = async (req, res, next) =>{
     
             <div class="footer">
                 <div class="footer-content">
-                    <div class="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg">
+                    <div class="https://i.ibb.co/KKGS4Cw/footer-logo.png">
                         <img src="footer-logo.png" alt="">
                     </div>
                     <div class="footer-info">
@@ -842,16 +862,16 @@ exports.forgotPassword = async (req, res, next) => {
                             <tr>
                                 <td style="padding: 10px;">
                                     <div class="contact-info">
-                                        <p><img src="https://i.ibb.co/K04zq8b/WCall.png" alt="" style="width: 20px;"> +1 (615) 623-1368</p>
-                                        <p><img src="https://i.ibb.co/TL7k4FF/Container.png" alt="" style="width: 20px;"> thecoinstarprobitminers@gmail.com</p>
-                                        <p><img src="https://i.ibb.co/CbSFkwC/Wloc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
+                                        <p><img src="https://i.ibb.co/JHCPcsm/Call.png" alt="" style="width: 20px;"> +1 504-332-9455</p>
+                                        <p><img src="https://i.ibb.co/X8FBvY8/Container.png" alt="" style="width: 20px;"> support@Swiftearn Prime.com</p>
+                                        <p><img src="https://i.ibb.co/1JTGL6y/loc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding: 20px 0;">
-                                    <img src="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg" alt="">
-                                    <h1 style="color: #ffffff; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
+                                    <img src="https://i.ibb.co/KKGS4Cw/footer-logo.png" alt="">
+                                    <h1 style="color: #eb6a07; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
                                 </td>
                             </tr>
                         </table>
@@ -865,7 +885,7 @@ exports.forgotPassword = async (req, res, next) => {
             
                     <div class="footer">
                         <div class="footer-content">
-                            <div class="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg">
+                            <div class="https://i.ibb.co/KKGS4Cw/footer-logo.png">
                                 <img src="footer-logo.png" alt="">
                             </div>
                             <div class="footer-info">
@@ -1015,16 +1035,16 @@ exports.depositEmailSend = async (req, res, next) =>{
                       <tr>
                           <td style="padding: 10px;">
                               <div class="contact-info">
-                                  <p><img src="https://i.ibb.co/K04zq8b/WCall.png" alt="" style="width: 20px;"> +1 (615) 623-1368</p>
-                                  <p><img src="https://i.ibb.co/TL7k4FF/Container.png" alt="" style="width: 20px;"> thecoinstarprobitminers@gmail.com</p>
-                                  <p><img src="https://i.ibb.co/CbSFkwC/Wloc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
+                                  <p><img src="https://i.ibb.co/JHCPcsm/Call.png" alt="" style="width: 20px;"> +1 504-332-9455</p>
+                                  <p><img src="https://i.ibb.co/X8FBvY8/Container.png" alt="" style="width: 20px;"> support@Swiftearn Prime.com</p>
+                                  <p><img src="https://i.ibb.co/1JTGL6y/loc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
                               </div>
                           </td>
                       </tr>
                       <tr>
                           <td style="padding: 20px 0;">
-                              <img src="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg" alt="">
-                              <h1 style="color: #ffffff; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
+                              <img src="https://i.ibb.co/KKGS4Cw/footer-logo.png" alt="">
+                              <h1 style="color: #eb6a07; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
                           </td>
                       </tr>
                   </table>
@@ -1039,147 +1059,7 @@ exports.depositEmailSend = async (req, res, next) =>{
       
               <div class="footer">
                   <div class="footer-content">
-                      <div class="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg">
-                          <img src="footer-logo.png" alt="">
-                      </div>
-                      <div class="footer-info">
-                          <p>We bring the years, global experience, and stamina to guide our clients through new and often disruptive realities.</p>
-                          <p>© Copyright 2024 Swiftearn Prime. All Rights Reserved.</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </body>
-      </html>
-      `,
-  }
-  
-  transporter.sendMail(mailOptions,(err, info)=>{
-  if(err){
-      console.log("erro",err.message);
-  }else{
-      console.log("Email has been sent to your inbox", info.response);
-  }
-  })
-  
-  res.status(200).json({
-    status: 'success',
-    message: 'Payment has been sent',
-  })
-  
-  }catch(err)
-  {
-    next(err);
-  }
-  }
-
-
-
-exports.InvestEmailSend = async (req, res, next) =>{
-  try{
-    const id = req.params.id
-    const amount = req.body.amount
-    const planId = req.body.planId
-    const userInfo = await User.findById(id);
-    const Plan = await plansModel.findById(planId);
-  
-    const mailOptions ={
-      from: process.env.USER,
-      to: userInfo.email, 
-      subject: "Successful Investment",
-    html: `
-     
-        <!DOCTYPE html>
-      <html lang="en">
-      <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Document</title>
-      <style>
-          body {
-              margin: 0;
-              padding: 0;
-              font-family: Arial, Helvetica, sans-serif;
-              background-color: whitesmoke;
-          }
-          .container {
-              width: 100%;
-              background-color: whitesmoke;
-              padding: 0;
-              margin: 0;
-          }
-          .header, .footer {
-              width: 100%;
-              background-color: #21007F;
-              color: white;
-              text-align: center;
-          }
-          .content {
-              width: 100%;
-              max-width: 600px;
-              background-color: white;
-              padding: 20px;
-              margin: 20px auto;
-              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          }
-          .footer-content {
-              padding: 20px;
-              text-align: center;
-          }
-          .contact-info, .social-icons {
-              display: inline-block;
-              vertical-align: top;
-              width: 48%;
-              margin-bottom: 20px;
-          }
-          .social-icons img {
-              width: 30px;
-              margin: 0 5px;
-          }
-          .footer-logo img {
-              width: 50px;
-          }
-          .footer-logo, .footer-info {
-              text-align: center;
-              margin-bottom: 20px;
-          }
-          .footer p {
-              margin: 5px 0;
-          }
-      </style>
-      </head>
-      <body>
-          <div class="container">
-              <div class="header">
-                  <table width="100%" cellspacing="0" cellpadding="0">
-                      <tr>
-                          <td style="padding: 10px;">
-                              <div class="contact-info">
-                                  <p><img src="https://i.ibb.co/K04zq8b/WCall.png" alt="" style="width: 20px;"> +1 (615) 623-1368</p>
-                                  <p><img src="https://i.ibb.co/TL7k4FF/Container.png" alt="" style="width: 20px;"> thecoinstarprobitminers@gmail.com</p>
-                                  <p><img src="https://i.ibb.co/CbSFkwC/Wloc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
-                              </div>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td style="padding: 20px 0;">
-                              <img src="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg" alt="">
-                              <h1 style="color: #ffffff; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
-                          </td>
-                      </tr>
-                  </table>
-              </div>
-      
-              <div class="content">
-                  <p>Hi, Investor ${userInfo.fullName},</p>
-                  <p>You have successfully invested a total of ${amount} on ${Plan.planName} Plan<br><br><br><br>This Plan is Valid for ${Plan.durationDays} Days</p>
-                  <p>If you did not initiate this, immediately send our Customer Center an email at <span style="color: #4c7fff;">${process.env.USER}</span></p>
-                  <p>Thank you for choosing our platform.</p>
-              </div>
-      
-              <div class="footer">
-                  <div class="footer-content">
-                      <div class="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg">
+                      <div class="https://i.ibb.co/KKGS4Cw/footer-logo.png">
                           <img src="footer-logo.png" alt="">
                       </div>
                       <div class="footer-info">
@@ -1290,16 +1170,16 @@ exports.ApproveDepositEmailSend = async (req, res, next) =>{
                       <tr>
                           <td style="padding: 10px;">
                               <div class="contact-info">
-                                  <p><img src="https://i.ibb.co/K04zq8b/WCall.png" alt="" style="width: 20px;"> +1 (615) 623-1368</p>
-                                  <p><img src="https://i.ibb.co/TL7k4FF/Container.png" alt="" style="width: 20px;"> thecoinstarprobitminers@gmail.com</p>
-                                  <p><img src="https://i.ibb.co/CbSFkwC/Wloc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
+                                  <p><img src="https://i.ibb.co/JHCPcsm/Call.png" alt="" style="width: 20px;"> +1 504-332-9455</p>
+                                  <p><img src="https://i.ibb.co/X8FBvY8/Container.png" alt="" style="width: 20px;"> support@Swiftearn Prime.com</p>
+                                  <p><img src="https://i.ibb.co/1JTGL6y/loc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
                               </div>
                           </td>
                       </tr>
                       <tr>
                           <td style="padding: 20px 0;">
-                              <img src="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg" alt="">
-                              <h1 style="color: #ffffff; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
+                              <img src="https://i.ibb.co/KKGS4Cw/footer-logo.png" alt="">
+                              <h1 style="color: #eb6a07; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
                           </td>
                       </tr>
                   </table>
@@ -1314,7 +1194,7 @@ exports.ApproveDepositEmailSend = async (req, res, next) =>{
       
               <div class="footer">
                   <div class="footer-content">
-                      <div class="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg">
+                      <div class="https://i.ibb.co/KKGS4Cw/footer-logo.png">
                           <img src="footer-logo.png" alt="">
                       </div>
                       <div class="footer-info">
@@ -1426,16 +1306,16 @@ exports.withdrawalEmailSend = async (req, res, next) =>{
                       <tr>
                           <td style="padding: 10px;">
                               <div class="contact-info">
-                                  <p><img src="https://i.ibb.co/K04zq8b/WCall.png" alt="" style="width: 20px;"> +1 (615) 623-1368</p>
-                                  <p><img src="https://i.ibb.co/TL7k4FF/Container.png" alt="" style="width: 20px;"> thecoinstarprobitminers@gmail.com</p>
-                                  <p><img src="https://i.ibb.co/CbSFkwC/Wloc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
+                                  <p><img src="https://i.ibb.co/JHCPcsm/Call.png" alt="" style="width: 20px;"> +1 504-332-9455</p>
+                                  <p><img src="https://i.ibb.co/X8FBvY8/Container.png" alt="" style="width: 20px;"> support@Swiftearn Prime.com</p>
+                                  <p><img src="https://i.ibb.co/1JTGL6y/loc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
                               </div>
                           </td>
                       </tr>
                       <tr>
                           <td style="padding: 20px 0;">
-                              <img src="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg" alt="">
-                              <h1 style="color: #ffffff; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
+                              <img src="https://i.ibb.co/KKGS4Cw/footer-logo.png" alt="">
+                              <h1 style="color: #eb6a07; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
                           </td>
                       </tr>
                   </table>
@@ -1456,7 +1336,7 @@ exports.withdrawalEmailSend = async (req, res, next) =>{
       
               <div class="footer">
                   <div class="footer-content">
-                      <div class="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg">
+                      <div class="https://i.ibb.co/KKGS4Cw/footer-logo.png">
                           <img src="footer-logo.png" alt="">
                       </div>
                       <div class="footer-info">
@@ -1568,16 +1448,16 @@ exports.ConfirmWithdrawalEmailSend = async (req, res, next) =>{
                       <tr>
                           <td style="padding: 10px;">
                               <div class="contact-info">
-                                  <p><img src="https://i.ibb.co/K04zq8b/WCall.png" alt="" style="width: 20px;"> +1 (615) 623-1368</p>
-                                  <p><img src="https://i.ibb.co/TL7k4FF/Container.png" alt="" style="width: 20px;"> thecoinstarprobitminers@gmail.com</p>
-                                  <p><img src="https://i.ibb.co/CbSFkwC/Wloc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
+                                  <p><img src="https://i.ibb.co/JHCPcsm/Call.png" alt="" style="width: 20px;"> +1 504-332-9455</p>
+                                  <p><img src="https://i.ibb.co/X8FBvY8/Container.png" alt="" style="width: 20px;"> support@Swiftearn Prime.com</p>
+                                  <p><img src="https://i.ibb.co/1JTGL6y/loc.png" alt="" style="width: 20px;"> 18 Eastbourne Rd, United Kingdom</p>
                               </div>
                           </td>
                       </tr>
                       <tr>
                           <td style="padding: 20px 0;">
-                              <img src="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg" alt="">
-                              <h1 style="color: #ffffff; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
+                              <img src="https://i.ibb.co/KKGS4Cw/footer-logo.png" alt="">
+                              <h1 style="color: #eb6a07; font-size: 40px; font-family: Impact, sans-serif; font-weight: 500">Swiftearn Prime</h1>
                           </td>
                       </tr>
                   </table>
@@ -1592,7 +1472,7 @@ exports.ConfirmWithdrawalEmailSend = async (req, res, next) =>{
       
               <div class="footer">
                   <div class="footer-content">
-                      <div class="https://i.ibb.co/Gcs5Lbx/jjjjjjjjjj.jpg">
+                      <div class="https://i.ibb.co/KKGS4Cw/footer-logo.png">
                           <img src="footer-logo.png" alt="">
                       </div>
                       <div class="footer-info">
